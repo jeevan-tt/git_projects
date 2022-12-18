@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelWriter {
@@ -39,46 +40,64 @@ public class ExcelWriter {
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Contacts");
 
+		sheet.protectSheet("password");
+
 		Font headerFont = workbook.createFont();
 		headerFont.setBold(true);
 		headerFont.setFontHeightInPoints((short) 14);
-		headerFont.setColor(IndexedColors.RED.getIndex());
+		headerFont.setColor(IndexedColors.BLUE.getIndex());
 
 		CellStyle headerCellStyle = workbook.createCellStyle();
+
+		headerFont.setColor(IndexedColors.BLUE.getIndex());
 		headerCellStyle.setFont(headerFont);
 
-		// Create a Row
+		headerCellStyle.setLocked(true);
+
+		Font UnlockedFont = workbook.createFont();
+		CellStyle unLockedheaderCellStyle = workbook.createCellStyle();
+		unLockedheaderCellStyle.setFont(UnlockedFont);
+
+		unLockedheaderCellStyle.setLocked(false);
+
+		// For creation of new row
 		Row headerRow = sheet.createRow(0);
 
 		for (int i = 0; i < columns.length; i++) {
+
 			Cell cell = headerRow.createCell(i);
 			cell.setCellValue(columns[i]);
 			cell.setCellStyle(headerCellStyle);
 
 		}
-
-		// Create Other rows and cells with contacts data
+		// create row for the list and make a coulmns locking  and unlocking
 		int rowNum = 1;
-
 		for (Contacts contact : contacts) {
 			Row row = sheet.createRow(rowNum++);
 			row.createCell(0).setCellValue(contact.firstName);
 
 			row.createCell(1).setCellValue(contact.lastName);
 			row.createCell(2).setCellValue(contact.email);
+
 			row.createCell(3).setCellValue(contact.dateOfBirth);
+			row.getCell(3).setCellStyle(unLockedheaderCellStyle);
+
 		}
 
-		// Resize all columns to fit the content size
+		// To Make the alignment size better
 		for (int i = 0; i < columns.length; i++) {
 			sheet.autoSizeColumn(i);
 
 		}
 
-		// Write the output to a file
-		FileOutputStream fileOut = new FileOutputStream("Downloadscontacts.xlsx");
-		workbook.write(fileOut);
-		fileOut.close();
-	}
+		try {
+			FileOutputStream fileOut = new FileOutputStream("C:\\Users\\jeeva\\OneDrive\\Desktop\\Contactslist.xlsx");
+			workbook.write(fileOut);
+			fileOut.close();
+			System.out.println("File created Succesfully");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
+	}
 }
