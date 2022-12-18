@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellRange;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -21,7 +20,7 @@ public class ExcelWriter {
 	private static String[] columns = { "First Name", "Last Name", "Email", "Date Of Birth" };
 	private static List<Contacts> contacts = new ArrayList<Contacts>();
 
-	public static void main(String[] args) throws IOException, InvalidFormatException {
+	public static void main(String[] args) throws IOException {
 		contacts.add(new Contacts("Jeevan", "AT", "jeevantt4@gmail.com", "03-06-19999"));
 		contacts.add(new Contacts("aeevan", "BT", "Aeevantt4@gmail.com", "03-06-19998"));
 		contacts.add(new Contacts("beevan", "CT", "Beevantt4@gmail.com", "03-06-19996"));
