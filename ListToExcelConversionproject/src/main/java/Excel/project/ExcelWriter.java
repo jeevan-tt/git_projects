@@ -98,8 +98,8 @@ public class ExcelWriter {
 		XSSFDataValidation validation = (XSSFDataValidation) dvHelper.createValidation(dvConstraint, addressList);
 
 		validation.setErrorStyle(ErrorStyle.STOP);
-		validation.createErrorBox("Error", "Only numeric values are allowed");
-		validation.setShowErrorBox(true); // The code is missing this line
+		validation.createErrorBox("Error", "Only numeric values are allowed ...₹");
+		validation.setShowErrorBox(true);
 
 		sheet.addValidationData(validation);
 
