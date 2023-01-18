@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataValidation.ErrorStyle;
 import org.apache.poi.ss.usermodel.DataValidationConstraint.OperatorType;
+import org.apache.poi.ss.usermodel.DataValidationConstraint.ValidationType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,7 +27,7 @@ public class ExcelWriter {
 	private static List<Contacts> contacts = new ArrayList<Contacts>();
 
 	public static void main(String[] args) throws IOException {
-		contacts.add(new Contacts("Jeevan", "AT", "jeevantt4@gmail.com", "030619999"));
+		contacts.add(new Contacts("kevin", "AT", "jeevantt4@gmail.com", "030619999"));
 		contacts.add(new Contacts("aeevan", "BT", "Aeevantt4@gmail.com", "030619998"));
 		contacts.add(new Contacts("beevan", "CT", "Beevantt4@gmail.com", "030619996"));
 		contacts.add(new Contacts("ceevan", "DT", "Ceevantt4@gmail.com", "030619996"));
@@ -44,6 +45,7 @@ public class ExcelWriter {
 		Workbook workbook = new XSSFWorkbook();
 
 		XSSFSheet sheet = (XSSFSheet) workbook.createSheet("Contacts");
+		((XSSFWorkbook) workbook).lockStructure();
 
 		sheet.protectSheet("password");
 
@@ -91,13 +93,16 @@ public class ExcelWriter {
 		// added newly for numeric validation
 
 		XSSFDataValidationHelper dvHelper = new XSSFDataValidationHelper(sheet);
+
 		XSSFDataValidationConstraint dvConstraint = (XSSFDataValidationConstraint) dvHelper
-				.createIntegerConstraint(OperatorType.BETWEEN, "0", "9999999999999999");
+				.createIntegerConstraint(OperatorType.BETWEEN, "1", "9999999999999999");
 		CellRangeAddressList addressList = new CellRangeAddressList(1, sheet.getLastRowNum() + 1, 3,
 				sheet.getRow(1).getLastCellNum());
+
 		XSSFDataValidation validation = (XSSFDataValidation) dvHelper.createValidation(dvConstraint, addressList);
 
 		validation.setErrorStyle(ErrorStyle.STOP);
+		 validation.setEmptyCellAllowed(false); 
 		validation.createErrorBox("Error", "Only numeric values are allowed ...₹");
 		validation.setShowErrorBox(true);
 
