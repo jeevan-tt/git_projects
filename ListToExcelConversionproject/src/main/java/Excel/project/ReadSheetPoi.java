@@ -45,7 +45,7 @@ public class ReadSheetPoi {
 			}
 
 		} else {
-			System.out.println("UN AUTHERISED");
+			System.out.println("UN AUTHURISED");
 		}
 	}
 
