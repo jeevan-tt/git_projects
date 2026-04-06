@@ -1,0 +1,47 @@
+private List<CrdPdmGstrAnlysCs> mergeChildList(
+        List<CrdPdmGstrAnlysCs> targetList,
+        List<CrdPdmGstrAnlysCsDTO> sourceList) {
+
+    if (sourceList == null) return targetList;
+
+    Map<String, CrdPdmGstrAnlysCs> targetMap =
+            Optional.ofNullable(targetList)
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .filter(e -> e.getGstin() != null)
+                    .collect(Collectors.toMap(
+                            CrdPdmGstrAnlysCs::getGstin,
+                            Function.identity(),
+                            (a, b) -> a
+                    ));
+
+    Map<String, CrdPdmGstrAnlysCsDTO> sourceMap =
+            sourceList.stream()
+                    .filter(e -> e.getGstin() != null)
+                    .collect(Collectors.toMap(
+                            CrdPdmGstrAnlysCsDTO::getGstin,
+                            Function.identity(),
+                            (a, b) -> a
+                    ));
+
+    // 🔥 Merge using Stream (NO loops)
+    return Stream.concat(
+                    targetMap.keySet().stream(),
+                    sourceMap.keySet().stream()
+            )
+            .distinct()
+            .map(gstin -> {
+
+                CrdPdmGstrAnlysCs existing = targetMap.get(gstin);
+                CrdPdmGstrAnlysCsDTO incoming = sourceMap.get(gstin);
+
+                if (existing != null && incoming != null) {
+                    return updateAndReturn(existing, incoming);
+                } else if (incoming != null) {
+                    return convertCs(incoming);
+                } else {
+                    return existing;
+                }
+            })
+            .collect(Collectors.toList());
+}
